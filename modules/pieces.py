@@ -32,7 +32,7 @@ class MovementRect(pygame.sprite.Sprite):
         self.image.convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x * 60, y * 60
-        pygame.draw.rect(self.image, (138, 43, 226), (0, 0, 60, 60),  5)
+        pygame.draw.rect(self.image, (245, 164, 66, 170), (0, 0, 60, 60))
 
 
 class Piece(pygame.sprite.Sprite):
