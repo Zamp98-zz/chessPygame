@@ -31,6 +31,7 @@ clock = pygame.time.Clock()
 # define a variable to control the main loop
 running = True
 
+Rects = pygame.sprite.Group()
 
 # main loop
 while running:
@@ -51,9 +52,19 @@ while running:
                 for s in sprites:  # allow only one highlighted
                     if s != clicked_sprites[0] and s.highlighted:
                         s.unsethighlighted()
+                        Rects = set()
+
+            pieceMoves = clicked_sprites[0].genLegalMoves(board)
+
+            for move in pieceMoves:
+                movementRect = MovementRect(move[0],move[1],screen)
+                Rects.add(movementRect)
+
+
     all_sprites_list = pygame.sprite.Group()
     sprites = [piece for row in board.array for piece in row if piece]
     all_sprites_list.add(sprites)
+    all_sprites_list.add(Rects)
 
     # draw the sprites
     all_sprites_list.draw(screen)
