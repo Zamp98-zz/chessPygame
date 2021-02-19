@@ -11,7 +11,16 @@ class Piece(pygame.sprite.Sprite):
         self.image.convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = x * 60, y * 60
-        self.highlighed = False
+        self.highlighted = False
+        self.symbol = ""
+    def sethighlighted(self):
+        self.highlighted = True
+        self.update()
+
+    def unsethighlighted(self):
+        self.highlighted = False
+        self.update()
+
 
 
 class Pawn(Piece):
@@ -22,6 +31,15 @@ class Pawn(Piece):
         self.sprite = pygame.transform.scale(self.sprite, (50, 50))
         self.image.blit(self.sprite, (5, 5))
 
+    def update(self):
+        if self.highlighted:
+            self.sprite = pygame.image.load("images/highlighted{}Pawn.png".format(self.color)).convert_alpha()
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
+        else:
+            self.sprite = pygame.image.load("images/{}Pawn.png".format(self.color)).convert_alpha()
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
 
 class Rook(Piece):
     def __init__(self, color, y, x):
@@ -31,7 +49,15 @@ class Rook(Piece):
         self.symbol = "R"
         self.image.blit(self.sprite, (5, 5))
         self.moved = False
-
+    def update(self):
+        if self.highlighted:
+            self.sprite = pygame.image.load("images/highlighted{}Rook.png".format(self.color)).convert_alpha()
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
+        else:
+            self.sprite = pygame.image.load("images/{}Rook.png".format(self.color))
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
 
 class Bishop(Piece):
     def __init__(self, color, y, x):
@@ -41,6 +67,15 @@ class Bishop(Piece):
         self.sprite = pygame.transform.scale(self.sprite, (50, 50))
         self.symbol = "B"
         self.image.blit(self.sprite, (5, 5))
+    def update(self):
+        if self.highlighted:
+            self.sprite = pygame.image.load("images/highlighted{}Bishop.png".format(self.color)).convert_alpha()
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
+        else:
+            self.sprite = pygame.image.load("images/{}Bishop.png".format(self.color))
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
 
 
 class Knight(Piece):
@@ -51,7 +86,15 @@ class Knight(Piece):
         self.sprite = pygame.transform.scale(self.sprite, (50, 50))
         self.symbol = "N"
         self.image.blit(self.sprite, (5, 5))
-
+    def update(self):
+        if self.highlighted:
+            self.sprite = pygame.image.load("images/highlighted{}Knight.png".format(self.color)).convert_alpha()
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
+        else:
+            self.sprite = pygame.image.load("images/{}Knight.png".format(self.color))
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
 
 class King(Piece):
     def __init__(self, color, y, x):
@@ -61,7 +104,15 @@ class King(Piece):
         self.symbol = "K"
         self.image.blit(self.sprite, (5, 5))
         self.moved = False
-
+    def update(self):
+        if self.highlighted:
+            self.sprite = pygame.image.load("images/highlighted{}King.png".format(self.color)).convert_alpha()
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
+        else:
+            self.sprite = pygame.image.load("images/{}King.png".format(self.color))
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
 
 class Queen(Piece):
     def __init__(self, color, y, x):
@@ -71,3 +122,13 @@ class Queen(Piece):
         self.sprite = pygame.transform.scale(self.sprite, (50, 50))
         self.symbol = "Q"
         self.image.blit(self.sprite, (5, 5))
+
+    def update(self):
+        if self.highlighted:
+            self.sprite = pygame.image.load("images/highlighted{}Queen.png".format(self.color)).convert_alpha()
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
+        else:
+            self.sprite = pygame.image.load("images/{}Queen.png".format(self.color))
+            self.sprite = pygame.transform.scale(self.sprite, (50, 50))
+            self.image.blit(self.sprite, (5, 5))
