@@ -53,12 +53,12 @@ while running:
                     if s != clicked_sprites[0] and s.highlighted:
                         s.unsethighlighted()
                         Rects = set()
+            
+                pieceMoves = clicked_sprites[0].genLegalMoves(board)
 
-            pieceMoves = clicked_sprites[0].genLegalMoves(board)
-
-            for move in pieceMoves:
-                movementRect = MovementRect(move[0],move[1],screen)
-                Rects.add(movementRect)
+                for move in pieceMoves:
+                    movementRect = MovementRect(move[0],move[1],screen)
+                    Rects.add(movementRect)
 
 
     all_sprites_list = pygame.sprite.Group()
