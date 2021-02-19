@@ -40,8 +40,6 @@ while running:
         if event.type == pygame.QUIT:
             # change the value to False, to exit the main loop
             running = False
-        if event.type == pygame.QUIT:
-            running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             # Set the x, y positions of the mouse click
             x, y = event.pos
