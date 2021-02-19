@@ -22,5 +22,6 @@ class Board:
             [self.whiteRookLeft, Knight("white", 7, 1), Bishop("white", 7, 2), Queen("white", 7, 3),
                 self.whiteKing, Bishop("white", 7, 5), Knight("white", 7, 6), self.whiteRookRight]
         ]
+
     def getBoard(self):
-        return self.array;
+        return self.array

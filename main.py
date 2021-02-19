@@ -43,14 +43,14 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             # Set the x, y positions of the mouse click
             x, y = event.pos
-            clicked_sprites = [s for s in sprites if s.rect.collidepoint(event.pos)]
+            clicked_sprites = [
+                s for s in sprites if s.rect.collidepoint(event.pos)]
             if(len(clicked_sprites) > 0):
                 clicked_sprites[0].sethighlighted()
 
-
-                for s in sprites:#allow only one highlighted
+                for s in sprites:  # allow only one highlighted
                     if s != clicked_sprites[0] and s.highlighted:
-                       s.unsethighlighted()
+                        s.unsethighlighted()
     all_sprites_list = pygame.sprite.Group()
     sprites = [piece for row in board.array for piece in row if piece]
     all_sprites_list.add(sprites)
