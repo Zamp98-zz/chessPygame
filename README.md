@@ -7,6 +7,7 @@ Jogo desenvolvido em [Python](https://www.python.org/) utilizando o modulo de jo
 ## Sobre o Jogo
 
 Nada mais que um simples jogo de xadrez.
+O computador escolhe as jogadas através do algoritmo [Minimax](https://pt.wikipedia.org/wiki/Minimax) e otimizado para fazer melhores escolhas com o algoritmo de otimização [Alpha-Beta-Pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning).
 
 ### Como Jogar
 
