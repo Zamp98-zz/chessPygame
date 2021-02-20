@@ -57,7 +57,8 @@ while running:
             clickedSprites = [
                 s for s in sprites if s.rect.collidepoint(event.pos)]
             if(len(clickedSprites) > 0) and clickedSprites[0].color == "white":
-                clickedSprites[0].sethighlighted()
+                if not clickedSprites[0].highlighted:
+                    clickedSprites[0].sethighlighted()
 
                 for s in sprites:  # allow only one highlighted
                     if s != clickedSprites[0] and s.highlighted:
