@@ -35,11 +35,11 @@ python3 main.py
 python main.py
 ```
 
+</details>
+
 ## Como iniciar o Teste de Unidade
 
 O teste de unidadde consiste em um teste de entrada e saida do jogo. todos os testes precisam retornar ok.
-
-</details>
 
 ```bash
 python3 -m unittest -v unitTestChess.Test
