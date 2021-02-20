@@ -11,7 +11,7 @@ O computador escolhe as jogadas através do algoritmo [Minimax](https://pt.wikip
 
 ### Como Jogar
 
-Ainda não definido se os controles serão por cliques do mouse ou digitado por um prompt.
+Ao selecionar uma peça do tabuleiro com o mouse aparecerá as opções de jogadas possíveis para a peça, ao selecionar o quadrado para qual deseja mover a peça o jogo altera as posições e passa a vez do jogo para máquina e por aí em diante. As regras são as mesmas de um jogo de xadrez clássico.
 
 ## Como jogar localmente
 

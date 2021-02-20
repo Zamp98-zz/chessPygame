@@ -1,6 +1,7 @@
 # import the pygame module, so you can use it
 import pygame
 from modules.board import *
+from modules.oponent import *
 
 # define a main function
 
@@ -17,13 +18,13 @@ bg = pygame.image.load("images/chessBoard.png").convert()
 
 board = Board()
 
-global all_sprites_list, sprites
-all_sprites_list = pygame.sprite.Group()
+global allSpritesList, sprites
+allSpritesList = pygame.sprite.Group()
 sprites = [piece for row in board.array for piece in row if piece]
-all_sprites_list.add(sprites)
+allSpritesList.add(sprites)
 
 # draw the sprites
-all_sprites_list.draw(screen)
+allSpritesList.draw(screen)
 
 # 60FPS PC Master Race
 clock = pygame.time.Clock()
@@ -31,6 +32,16 @@ clock = pygame.time.Clock()
 # define a variable to control the main loop
 running = True
 
+Rects = pygame.sprite.Group()
+
+
+def tileSelected():
+    x, y = pygame.mouse.get_pos()
+    x = x // 60
+    y = y // 60
+    return (y, x)
+
+pieceSelected = False
 
 # main loop
 while running:
@@ -40,25 +51,64 @@ while running:
         if event.type == pygame.QUIT:
             # change the value to False, to exit the main loop
             running = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN and not pieceSelected:
             # Set the x, y positions of the mouse click
             x, y = event.pos
-            clicked_sprites = [
+            clickedSprites = [
                 s for s in sprites if s.rect.collidepoint(event.pos)]
-            if(len(clicked_sprites) > 0):
-                clicked_sprites[0].sethighlighted()
+            if(len(clickedSprites) > 0) and clickedSprites[0].color == "white":
+                if not clickedSprites[0].highlighted:
+                    clickedSprites[0].sethighlighted()
 
                 for s in sprites:  # allow only one highlighted
-                    if s != clicked_sprites[0] and s.highlighted:
+                    if s != clickedSprites[0] and s.highlighted:
                         s.unsethighlighted()
-    all_sprites_list = pygame.sprite.Group()
+                        Rects = set()
+
+                pieceMoves = clickedSprites[0].genLegalMoves(board)
+                pieceSelected = True
+
+                for move in pieceMoves:
+                    movementRect = MovementRect(move[0], move[1], screen)
+                    Rects.add(movementRect)
+
+        elif event.type == pygame.MOUSEBUTTONDOWN and pieceSelected:
+            tile = tileSelected()
+            pieceSelected = False
+            Rects = set()
+
+            if tile in pieceMoves:
+                oldx = clickedSprites[0].x
+                oldy = clickedSprites[0].y
+                dest = board.array[tile[0]][tile[1]]
+
+                piecePromotion = board.movePiece(
+                    clickedSprites[0], tile[0], tile[1])
+
+                if piecePromotion:
+                    allSpritesList.add(piecePromotion[0])
+                    sprites.append(piecePromotion[0])
+                    allSpritesList.remove(piecePromotion[1])
+                    sprites.remove(piecePromotion[1])
+
+                if dest:
+                    allSpritesList.remove(dest)
+                    sprites.remove(dest)
+
+
+            elif (clickedSprites[0].y, clickedSprites[0].x) == tile:
+                clickedSprites[0].unsethighlighted()
+                selected = False
+
+    allSpritesList = pygame.sprite.Group()
     sprites = [piece for row in board.array for piece in row if piece]
-    all_sprites_list.add(sprites)
+    allSpritesList.add(sprites)
+    allSpritesList.add(Rects)
 
     # draw the sprites
-    all_sprites_list.draw(screen)
+    allSpritesList.draw(screen)
     screen.blit(bg, (0, 0))
-    all_sprites_list.draw(screen)
+    allSpritesList.draw(screen)
     pygame.display.flip()
     clock.tick(60)
 
