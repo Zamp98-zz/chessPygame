@@ -1,4 +1,5 @@
 # Chess Game Pygame ES II
+
 [![](https://img.shields.io/badge/Python-v3.8.6-blue?logo=python)](https://www.python.org/)
 [![](https://img.shields.io/badge/pygame-v2.0-yellow)](https://www.pygame.org/)
 
@@ -43,4 +44,6 @@ O teste de unidadde consiste em um teste de entrada e saida do jogo. todos os te
 
 ```bash
 python3 -m unittest -v unitTestChess.Test
+#ou
+python3 -m unitTestChess -v
 ```
