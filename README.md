@@ -40,7 +40,7 @@ python main.py
 
 ## Como iniciar o Teste de Unidade
 
-O teste de unidadde consiste em um teste de entrada e saida do jogo. todos os testes precisam retornar ok.
+O teste de unidadde consiste em um teste de entrada e saida do jogo. todos os testes precisam retornar ok. A lib usada para fazer os testes de unidade foi o [unittest](https://docs.python.org/pt-br/3/library/unittest.html).
 
 ```bash
 python3 -m unittest -v unitTestChess.Test
