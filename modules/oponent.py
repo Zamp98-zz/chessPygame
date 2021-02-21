@@ -17,7 +17,7 @@ def generatePossibleMoves(board, color, attc=False):
         for i in range(8):
             piece = board.array[i][j]
             if piece != None and piece.color == color:
-                legalMoves = piece.generatedLegalMoves(board)
+                legalMoves = piece.genLegalMoves(board)
                 if legalMoves and not attc:
                     moves[(i, j)] = legalMoves
                 elif legalMoves and attc:
