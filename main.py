@@ -41,6 +41,7 @@ def tileSelected():
     y = y // 60
     return (y, x)
 
+
 pieceSelected = False
 
 # main loop
@@ -94,7 +95,6 @@ while running:
                 if dest:
                     allSpritesList.remove(dest)
                     sprites.remove(dest)
-
 
             elif (clickedSprites[0].y, clickedSprites[0].x) == tile:
                 clickedSprites[0].unsethighlighted()
