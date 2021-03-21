@@ -43,6 +43,8 @@ def tileSelected():
 
 
 pieceSelected = False
+player = "white"
+trans_table = dict()
 
 # main loop
 while running:
@@ -52,53 +54,101 @@ while running:
         if event.type == pygame.QUIT:
             # change the value to False, to exit the main loop
             running = False
-        if event.type == pygame.MOUSEBUTTONDOWN and not pieceSelected:
-            # Set the x, y positions of the mouse click
-            x, y = event.pos
-            clickedSprites = [
-                s for s in sprites if s.rect.collidepoint(event.pos)]
-            if(len(clickedSprites) > 0) and clickedSprites[0].color == "white":
-                if not clickedSprites[0].highlighted:
-                    clickedSprites[0].sethighlighted()
 
-                for s in sprites:  # allow only one highlighted
-                    if s != clickedSprites[0] and s.highlighted:
-                        s.unsethighlighted()
-                        Rects = set()
+        if player == "white":
+            if event.type == pygame.MOUSEBUTTONDOWN and not pieceSelected:
+                # Set the x, y positions of the mouse click
+                x, y = event.pos
+                clickedSprites = [
+                    s for s in sprites if s.rect.collidepoint(event.pos)]
+                if(len(clickedSprites) > 0) and clickedSprites[0].color == "white":
+                    if not clickedSprites[0].highlighted:
+                        clickedSprites[0].sethighlighted()
 
-                pieceMoves = clickedSprites[0].genLegalMoves(board)
-                pieceSelected = True
+                    for s in sprites:  # allow only one highlighted
+                        if s != clickedSprites[0] and s.highlighted:
+                            s.unsethighlighted()
+                            Rects = set()
 
-                for move in pieceMoves:
-                    movementRect = MovementRect(move[0], move[1], screen)
-                    Rects.add(movementRect)
+                    pieceMoves = clickedSprites[0].genLegalMoves(board)
+                    pieceSelected = True
 
-        elif event.type == pygame.MOUSEBUTTONDOWN and pieceSelected:
-            tile = tileSelected()
-            pieceSelected = False
-            Rects = set()
+                    for move in pieceMoves:
+                        movementRect = MovementRect(move[0], move[1], screen)
+                        Rects.add(movementRect)
 
-            if tile in pieceMoves:
-                oldx = clickedSprites[0].x
-                oldy = clickedSprites[0].y
-                dest = board.array[tile[0]][tile[1]]
+            elif event.type == pygame.MOUSEBUTTONDOWN and pieceSelected:
+                tile = tileSelected()
+                pieceSelected = False
+                Rects = set()
 
-                piecePromotion = board.movePiece(
-                    clickedSprites[0], tile[0], tile[1])
+                if tile in pieceMoves:
+                    oldx = clickedSprites[0].x
+                    oldy = clickedSprites[0].y
+                    dest = board.array[tile[0]][tile[1]]
 
-                if piecePromotion:
-                    allSpritesList.add(piecePromotion[0])
-                    sprites.append(piecePromotion[0])
-                    allSpritesList.remove(piecePromotion[1])
-                    sprites.remove(piecePromotion[1])
+                    piecePromotion = board.movePiece(
+                        clickedSprites[0], tile[0], tile[1])
+
+                    if piecePromotion:
+                        allSpritesList.add(piecePromotion[0])
+                        sprites.append(piecePromotion[0])
+                        allSpritesList.remove(piecePromotion[1])
+                        sprites.remove(piecePromotion[1])
+
+                    if dest:
+                        allSpritesList.remove(dest)
+                        sprites.remove(dest)
+
+                    player = 'black'
+
+                elif (clickedSprites[0].y, clickedSprites[0].x) == tile:
+                    clickedSprites[0].unsethighlighted()
+                    selected = False
+
+        elif player == 'black':
+            # get a move from the minimax/alphabeta algorithm, at a search depth of 3
+            value, move = minimax(board, 3, float(
+                "-inf"), float("inf"), True, trans_table)
+
+            # this indicates an AI in checkmate; it has no possible moves
+            if value == float("-inf") and move == 0:
+                player = 'white'
+                print(value)
+
+            # perform the AI's move
+            else:
+                start = move[0]
+                end = move[1]
+                piece = board.array[start[0]][start[1]]
+                dest = board.array[end[0]][end[1]]
+
+                # deal with a possible pawn promotion, the same way it is dealt
+                # above for the player
+                pawn_promotion = board.movePiece(piece, end[0], end[1])
+                if pawn_promotion:
+                    allSpritesList.add(pawn_promotion[0])
+                    sprites.append(pawn_promotion[0])
+                    allSpritesList.remove(pawn_promotion[1])
+                    sprites.remove(pawn_promotion[1])
 
                 if dest:
                     allSpritesList.remove(dest)
                     sprites.remove(dest)
+                    board.score += board.pieceValues[type(dest)]
 
-            elif (clickedSprites[0].y, clickedSprites[0].x) == tile:
-                clickedSprites[0].unsethighlighted()
-                selected = False
+                player = 'white'
+                # check to see if the player is now in check, as a result of the
+                # AI's move
+                attacked = generatePossibleMoves(board, "black", True)
+                if (board.whiteKing.y, board.whiteKing.x) in attacked:
+                    checkWhite = True
+                else:
+                    checkWhite = False
+
+            if value == float("inf"):
+                print("Player checkmate")
+                player = 'black'
 
     allSpritesList = pygame.sprite.Group()
     sprites = [piece for row in board.array for piece in row if piece]
