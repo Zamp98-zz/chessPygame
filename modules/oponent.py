@@ -38,7 +38,7 @@ def minimax(board, depth, alpha, beta, maximizing, lastMove):
 
     if maximizing:
         bestValue = float("-inf")
-        blackMoves = generatePossibleMoves(board, "b")
+        blackMoves = generatePossibleMoves(board, "black")
 
         for start, moveSet in blackMoves.items():
             for end in moveSet:
@@ -48,7 +48,7 @@ def minimax(board, depth, alpha, beta, maximizing, lastMove):
 
                 pawnPromotion = board.movePiece(piece, end[0], end[1], False)
 
-                attacked = generatePossibleMoves(board, "w", True)
+                attacked = generatePossibleMoves(board, "white", True)
                 if (board.blackKing.y, board.blackKing.x) in attacked:
                     board.movePiece(piece, start[0], start[1], False, True)
                     board.array[end[0]][end[1]] = dest
@@ -57,7 +57,7 @@ def minimax(board, depth, alpha, beta, maximizing, lastMove):
                     continue
 
                 if dest != None:
-                    board.score += board.pieceValueDict[type(dest)]
+                    board.score += board.pieceValues[type(dest)]
 
                 v, __ = minimax(board, depth - 1, alpha, beta, False, lastMove)
 
@@ -68,7 +68,7 @@ def minimax(board, depth, alpha, beta, maximizing, lastMove):
                     board.score -= 9
 
                 if dest != None:
-                    board.score -= board.pieceValueDict[type(dest)]
+                    board.score -= board.pieceValues[type(dest)]
 
                 if v >= bestValue:
                     move = (start, (end[0], end[1]))
@@ -85,7 +85,7 @@ def minimax(board, depth, alpha, beta, maximizing, lastMove):
 
     else:
         bestValue = float("inf")
-        whiteMoves = generatePossibleMoves(board, "w")
+        whiteMoves = generatePossibleMoves(board, "white")
 
         for start, moveSet in whiteMoves.items():
             for end in moveSet:
@@ -94,7 +94,7 @@ def minimax(board, depth, alpha, beta, maximizing, lastMove):
                 dest = board.array[end[0]][end[1]]
                 pawnPromotion = board.movePiece(piece, end[0], end[1], False)
 
-                attacked = generatePossibleMoves(board, "b", True)
+                attacked = generatePossibleMoves(board, "black", True)
                 if (board.whiteKing.y, board.whiteKing.x) in attacked:
                     board.movePiece(piece, start[0], start[1], False, True)
                     board.array[end[0]][end[1]] = dest
@@ -103,7 +103,7 @@ def minimax(board, depth, alpha, beta, maximizing, lastMove):
                     continue
 
                 if dest != None:
-                    board.score -= board.pieceValueDict[type(dest)]
+                    board.score -= board.pieceValues[type(dest)]
 
                 v, __ = minimax(board, depth - 1, alpha, beta, True, lastMove)
 
@@ -115,7 +115,7 @@ def minimax(board, depth, alpha, beta, maximizing, lastMove):
                 if pawnPromotion:
                     board.score += 9
                 if dest != None:
-                    board.score += board.pieceValueDict[type(dest)]
+                    board.score += board.pieceValues[type(dest)]
 
                 if beta <= alpha:
                     return bestValue, 0

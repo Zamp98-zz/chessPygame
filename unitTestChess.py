@@ -29,9 +29,11 @@ class Test(unittest.TestCase):
         """ Testa as possibilidades de promoção da peça """
         # cria uma peça do tipo pião na matriz com posição [1,1]
         piece = Pawn("white", 1, 1)
-        # checando se a peça quando movida para uma posição com y = 1 ela retorna True
+        # checando se a peça quando movida para uma posição com y = 1 ela
+        # retorna True
         self.assertTrue(checkPiecePromotion(piece, 0))
-        # checando se a peça quando movida para uma posição com y = 2 ela retorna False
+        # checando se a peça quando movida para uma posição com y = 2 ela
+        # retorna False
         self.assertFalse(checkPiecePromotion(piece, 2))
 
     def test_capture_tile(self):
@@ -120,7 +122,6 @@ class Test(unittest.TestCase):
         # checando se o retorno da função é realmente uma tupla
         self.assertIsInstance(minimax(self.board, 0, float(
             '-inf'), float('inf'), True, last), tuple)
-
 
 if __name__ == '__main__':
     unittest.main()
