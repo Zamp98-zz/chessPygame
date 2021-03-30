@@ -44,24 +44,53 @@ class Board:
     def getBoard(self):
         return self.array
 
-    def movePiece(self, piece, y, x, special=False, np=False):
-        promotion = checkPiecePromotion(piece, y)
-        oldx = piece.x
-        oldy = piece.y
-        piece.x = x
-        piece.y = y
-        piece.rect.x = x * 60
-        piece.rect.y = y * 60
-        self.array[oldy][oldx] = None
+    def specialMove(self, piece, y, x, special):
+        color = piece.color
+        print("teste ",x,y)
+        if special[0] == "C":
+            self.movePiece(piece, y, x)
+            print('\n',piece)
+            piece.moved = True
+            if special[1] == "L" and color == "white":
+                rook = self.whiteRookLeft
+                i = 3
+                j = 7
+            elif special[1] == "R" and color == "white":
+                i = 5
+                j = 7
+                rook = self.whiteRookRight
+            elif special[1] == "L" and color == "black":
+                i = 3
+                j = 0
+                rook = self.blackRookLeft
+            elif special[1] == "R" and color == "black":
+                i = 5
+                j = 0
+                rook = self.blackRookRight
+            rook.moved = True
+            self.movePiece(rook, j, i)
 
-        if promotion and not np:
-            self.array[y][x] = Queen(piece.color, y, x)
-            if piece.color == "white":
-                self.score -= 9
-            elif piece.color == "black":
-                self.score += 9
+    def movePiece(self, piece, y, x, special = False, np = False):
+        if not special:
+            promotion = checkPiecePromotion(piece, y)
+            oldx = piece.x
+            oldy = piece.y
+            piece.x = x
+            piece.y = y
+            piece.rect.x = x * 60
+            piece.rect.y = y * 60
+            self.array[oldy][oldx] = None
 
-            return self.array[y][x], piece
+            if promotion and not np:
+                self.array[y][x] = Queen(piece.color, y, x)
+                if piece.color == "white":
+                    self.score -= 9
+                elif piece.color == "black":
+                    self.score += 9
+
+                return self.array[y][x], piece
+            else:
+                self.array[y][x] = piece
+                piece.unsethighlighted()
         else:
-            self.array[y][x] = piece
-            piece.unsethighlighted()
+            self.specialMove(piece,y,x,special)

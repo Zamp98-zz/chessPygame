@@ -81,6 +81,8 @@ while running:
                 tile = tileSelected()
                 pieceSelected = False
                 Rects = set()
+                specialMoves = specialMoveGen(board, "white")
+                print(tile)
 
                 if tile in pieceMoves:
                     oldx = clickedSprites[0].x
@@ -101,6 +103,17 @@ while running:
                         sprites.remove(dest)
 
                     player = 'black'
+
+                elif specialMoves and tile in specialMoves:
+                    special = specialMoves[tile]
+                    if (special == "CR" or special == "CL") and type(clickedSprites[0]) == King:
+                        board.movePiece(clickedSprites[0], tile[0], tile[1], special)
+                        selected = False
+                        player = "black"
+
+                    else:
+                        pygame.display.update()
+                        pygame.time.wait(1000)
 
                 elif (clickedSprites[0].y, clickedSprites[0].x) == tile:
                     clickedSprites[0].unsethighlighted()
