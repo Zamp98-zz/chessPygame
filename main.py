@@ -81,8 +81,8 @@ while running:
                 tile = tileSelected()
                 pieceSelected = False
                 Rects = set()
-                specialMoves = specialMoveGen(board, "white")
-                print(tile)
+                specialMovesRoque = specialMoveGen(board, "white")
+                enPassant = checkEnPassant(board,clickedSprites[0],"white")
 
                 if tile in pieceMoves:
                     oldx = clickedSprites[0].x
@@ -104,8 +104,16 @@ while running:
 
                     player = 'black'
 
-                elif specialMoves and tile in specialMoves:
-                    special = specialMoves[tile]
+                elif enPassant:
+                    if(tile[0] == clickedSprites[0].y-1 and tile[1] == clickedSprites[0].x+1 or tile[0] == clickedSprites[0].y-1 and tile[1] == clickedSprites[0].x-1):
+                        special = "EP"
+                        board.movePiece(clickedSprites[0], tile[0], tile[1], special)
+                        
+                        selected = False
+                        player = "black"
+
+                elif specialMovesRoque and tile in specialMovesRoque:
+                    special = specialMovesRoque[tile]
                     if (special == "CR" or special == "CL") and type(clickedSprites[0]) == King:
                         board.movePiece(clickedSprites[0], tile[0], tile[1], special)
                         selected = False
@@ -127,7 +135,6 @@ while running:
             # this indicates an AI in checkmate; it has no possible moves
             if value == float("-inf") and move == 0:
                 player = 'white'
-                print(value)
 
             # perform the AI's move
             else:
@@ -160,7 +167,6 @@ while running:
                     checkWhite = False
 
             if value == float("inf"):
-                print("Player checkmate")
                 player = 'black'
 
     allSpritesList = pygame.sprite.Group()

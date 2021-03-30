@@ -54,6 +54,16 @@ def specialMoveGen(board,color,moves = None):
 
     return moves
 
+def checkEnPassant(board,piece,color):
+    if (type(piece) == Pawn):
+        if(color == "white" and piece.y == 3):
+            if(type(board.array[3][piece.x+1]) == Pawn and board.array[3][piece.x+1].color == "black" or type(board.array[3][piece.x-1]) == Pawn and board.array[3][piece.x-1].color == "black"):
+                return 1
+        elif(color == "black" and piece.y == 4):
+            if(type(board.array[4][piece.x+1]) == Pawn and board.array[4][piece.x+1].color == "white" or type(board.array[4][piece.x-1]) == Pawn and board.array[4][piece.x-1].color == "white"):
+                return 1
+    return 0
+
 def matrixToTuple(array, arrayEmpty):
     for i in range(8):
         arrayEmpty[i] = tuple(array[i])

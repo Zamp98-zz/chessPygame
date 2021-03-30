@@ -46,10 +46,8 @@ class Board:
 
     def specialMove(self, piece, y, x, special):
         color = piece.color
-        print("teste ",x,y)
         if special[0] == "C":
             self.movePiece(piece, y, x)
-            print('\n',piece)
             piece.moved = True
             if special[1] == "L" and color == "white":
                 rook = self.whiteRookLeft
@@ -92,5 +90,20 @@ class Board:
             else:
                 self.array[y][x] = piece
                 piece.unsethighlighted()
+
+        elif(special == 'EP'):
+            oldx = piece.x
+            oldy = piece.y
+            piece.x = x
+            piece.y = y
+            piece.rect.x = x * 60
+            piece.rect.y = y * 60
+            self.array[oldy][oldx] = None
+            self.array[y][x] = piece
+            piece.unsethighlighted()
+            if(piece.color == "white"):
+                self.array[piece.y+1][piece.x] = None
+            elif(piece.color == "black"):
+                self.array[piece.y-1][piece.x] = None
         else:
             self.specialMove(piece,y,x,special)
