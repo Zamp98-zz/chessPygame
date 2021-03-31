@@ -81,6 +81,8 @@ while running:
                 tile = tileSelected()
                 pieceSelected = False
                 Rects = set()
+                specialMovesRoque = specialMoveGen(board, "white")
+                enPassant = checkEnPassant(board,clickedSprites[0],"white")
 
                 if tile in pieceMoves:
                     oldx = clickedSprites[0].x
@@ -102,6 +104,25 @@ while running:
 
                     player = 'black'
 
+                elif enPassant:
+                    if(tile[0] == clickedSprites[0].y-1 and tile[1] == clickedSprites[0].x+1 or tile[0] == clickedSprites[0].y-1 and tile[1] == clickedSprites[0].x-1):
+                        special = "EP"
+                        board.movePiece(clickedSprites[0], tile[0], tile[1], special)
+                        
+                        selected = False
+                        player = "black"
+
+                elif specialMovesRoque and tile in specialMovesRoque:
+                    special = specialMovesRoque[tile]
+                    if (special == "CR" or special == "CL") and type(clickedSprites[0]) == King:
+                        board.movePiece(clickedSprites[0], tile[0], tile[1], special)
+                        selected = False
+                        player = "black"
+
+                    else:
+                        pygame.display.update()
+                        pygame.time.wait(1000)
+
                 elif (clickedSprites[0].y, clickedSprites[0].x) == tile:
                     clickedSprites[0].unsethighlighted()
                     selected = False
@@ -114,7 +135,6 @@ while running:
             # this indicates an AI in checkmate; it has no possible moves
             if value == float("-inf") and move == 0:
                 player = 'white'
-                print(value)
 
             # perform the AI's move
             else:
@@ -147,7 +167,6 @@ while running:
                     checkWhite = False
 
             if value == float("inf"):
-                print("Player checkmate")
                 player = 'black'
 
     allSpritesList = pygame.sprite.Group()

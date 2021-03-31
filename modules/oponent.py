@@ -1,5 +1,68 @@
 from modules.board import *
 
+def checkCastling(board,c,side):
+    castleLeft = False
+    castleRight = False
+
+    if c == "white":
+        king = board.whiteKing
+        leftRook = board.whiteRookLeft
+        rightRook =  board.whiteRookRight
+        attacked = generatePossibleMoves(board, "black", True)
+        row = 7
+    elif c == "b":
+        king = board.blackKing
+        leftRook = board.blackRookLeft
+        rightRook =  board.blackRookRight
+        attacked = generatePossibleMoves(board, "w", True)
+        row = 0
+
+    squares = set()
+
+    if king.moved == False:
+        if board.array[row][0] == leftRook and leftRook.moved == False:
+            squares = {(row,1),(row,2),(row,3)}
+            if not board.array[row][1] and not board.array[row][2] and not board.array[row][3]:
+                if not attacked.intersection(squares):
+                    castleLeft = True
+        
+        if board.array[row][7] == rightRook and rightRook.moved == False:
+            squares = {(row,6),(row,5)}
+            if not board.array[row][6] and not board.array[row][5]:
+                if not attacked.intersection(squares):
+                    castleRight = True
+
+    if side == "r":
+        return castleRight
+    elif side == "l":
+        return castleLeft
+
+def specialMoveGen(board,color,moves = None):
+    if moves == None:
+        moves = dict()
+    if color == "white":
+        x = 7
+    elif color == "black":
+        x = 0
+    rightCastle = checkCastling(board,color,"r")
+    leftCastle = checkCastling(board,color,"l")
+
+    if rightCastle:
+        moves[(x,6)] = "CR"
+    if leftCastle:
+        moves[(x,2)] = "CL"
+
+    return moves
+
+def checkEnPassant(board,piece,color):
+    if (type(piece) == Pawn):
+        if(color == "white" and piece.y == 3):
+            if(type(board.array[3][piece.x+1]) == Pawn and board.array[3][piece.x+1].color == "black" or type(board.array[3][piece.x-1]) == Pawn and board.array[3][piece.x-1].color == "black"):
+                return 1
+        elif(color == "black" and piece.y == 4):
+            if(type(board.array[4][piece.x+1]) == Pawn and board.array[4][piece.x+1].color == "white" or type(board.array[4][piece.x-1]) == Pawn and board.array[4][piece.x-1].color == "white"):
+                return 1
+    return 0
 
 def matrixToTuple(array, arrayEmpty):
     for i in range(8):
