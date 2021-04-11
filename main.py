@@ -170,7 +170,7 @@ while running:
             if value == float("-inf") and move == 0:
                 print("AI checkmate")
                 player = 'white'
-                running == False
+                running = False
 
             else:
                 start = move[0]
