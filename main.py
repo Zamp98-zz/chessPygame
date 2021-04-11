@@ -82,7 +82,7 @@ while running:
                 pieceSelected = False
                 Rects = set()
                 specialMovesRoque = specialMoveGen(board, "white")
-                enPassant = checkEnPassant(board,clickedSprites[0],"white")
+                enPassant = checkEnPassant(board, clickedSprites[0], "white")
 
                 if tile in pieceMoves:
                     oldx = clickedSprites[0].x
@@ -102,20 +102,55 @@ while running:
                         allSpritesList.remove(dest)
                         sprites.remove(dest)
 
-                    player = 'black'
+                    attacked = generatePossibleMoves(board, "black", True)
+                    if (board.whiteKing.y, board.whiteKing.x) not in attacked:
+                        selected = False
+                        player = "black"
+
+                        if dest:
+                            board.score -= board.pieceValues[type(dest)]
+
+                    else:  # THIS MOVE IS IN CHECK, we have to reverse it
+                        board.movePiece(clickedSprites[0], oldy, oldx)
+                        if type(clickedSprites[0]) == King or type(clickedSprites[0]) == Rook:
+                            clickedSprites[0].moved = False
+                        board.array[tile[0]][tile[1]] = dest
+                        if dest:  # if dest not None
+                            allSpritesList.add(dest)
+                            sprites.append(dest)
+                        if piecePromotion:
+                            allSpritesList.add(piecePromotion[1])
+                            sprites.append(piecePromotion[1])
+                        clickedSprites[0].sethighlighted()
+
+                        # different sidemenus depend on whether or not you're
+                        # currently in check
+                        if checkWhite:
+                            pygame.display.update()
+                            pygame.time.wait(1000)
+                        else:
+                            pygame.display.update()
+                            pygame.time.wait(1000)
+
+
+                elif (clickedSprites[0].y, clickedSprites[0].x) == tile:
+                    clickedSprites[0].unsethighlighted()
+                    selected = False
 
                 elif enPassant:
                     if(tile[0] == clickedSprites[0].y-1 and tile[1] == clickedSprites[0].x+1 or tile[0] == clickedSprites[0].y-1 and tile[1] == clickedSprites[0].x-1):
                         special = "EP"
-                        board.movePiece(clickedSprites[0], tile[0], tile[1], special)
-                        
+                        board.movePiece(
+                            clickedSprites[0], tile[0], tile[1], special)
+
                         selected = False
                         player = "black"
 
                 elif specialMovesRoque and tile in specialMovesRoque:
                     special = specialMovesRoque[tile]
                     if (special == "CR" or special == "CL") and type(clickedSprites[0]) == King:
-                        board.movePiece(clickedSprites[0], tile[0], tile[1], special)
+                        board.movePiece(
+                            clickedSprites[0], tile[0], tile[1], special)
                         selected = False
                         player = "black"
 
@@ -127,30 +162,28 @@ while running:
                     clickedSprites[0].unsethighlighted()
                     selected = False
 
+
         elif player == 'black':
-            # get a move from the minimax/alphabeta algorithm, at a search depth of 3
             value, move = minimax(board, 3, float(
                 "-inf"), float("inf"), True, trans_table)
 
-            # this indicates an AI in checkmate; it has no possible moves
             if value == float("-inf") and move == 0:
+                print("AI checkmate")
                 player = 'white'
+                running == False
 
-            # perform the AI's move
             else:
                 start = move[0]
                 end = move[1]
                 piece = board.array[start[0]][start[1]]
                 dest = board.array[end[0]][end[1]]
 
-                # deal with a possible pawn promotion, the same way it is dealt
-                # above for the player
-                pawn_promotion = board.movePiece(piece, end[0], end[1])
-                if pawn_promotion:
-                    allSpritesList.add(pawn_promotion[0])
-                    sprites.append(pawn_promotion[0])
-                    allSpritesList.remove(pawn_promotion[1])
-                    sprites.remove(pawn_promotion[1])
+                piecePromotion = board.movePiece(piece, end[0], end[1])
+                if piecePromotion:
+                    allSpritesList.add(piecePromotion[0])
+                    sprites.append(piecePromotion[0])
+                    allSpritesList.remove(piecePromotion[1])
+                    sprites.remove(piecePromotion[1])
 
                 if dest:
                     allSpritesList.remove(dest)
@@ -158,8 +191,6 @@ while running:
                     board.score += board.pieceValues[type(dest)]
 
                 player = 'white'
-                # check to see if the player is now in check, as a result of the
-                # AI's move
                 attacked = generatePossibleMoves(board, "black", True)
                 if (board.whiteKing.y, board.whiteKing.x) in attacked:
                     checkWhite = True
@@ -167,7 +198,9 @@ while running:
                     checkWhite = False
 
             if value == float("inf"):
-                player = 'black'
+                print("Player checkmate")
+                running = False
+                player = 'AI'
 
     allSpritesList = pygame.sprite.Group()
     sprites = [piece for row in board.array for piece in row if piece]
