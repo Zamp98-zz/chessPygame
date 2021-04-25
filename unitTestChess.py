@@ -123,5 +123,28 @@ class Test(unittest.TestCase):
         self.assertIsInstance(minimax(self.board, 0, float(
             '-inf'), float('inf'), True, last), tuple)
 
+    def test_enpassant(self):
+        """ Verifica se é retornado a tipo certo de variavel """
+        piece = Knight("white", 3, 3)
+        # checando se o retorno da função é realmente um inteiro
+        self.assertIsInstance(checkEnPassant(self.board, piece, "white"), int)
+
+    def test_special_move_gen(self):
+        """ Verifica se é retornado a tipo certo de variavel """
+        # checando se o retorno da função é realmente um dicionario
+        self.assertIsInstance(specialMoveGen(self.board,"white"), dict)
+
+    def test_check_castling(self):
+        """ Verifica se é retornado a tipo certo de variavel """
+        # checando se o retorno da função é realmente um bool
+        self.assertIsInstance(checkCastling(self.board,"white","r"), bool)
+
+    def test_special_move(self):
+        """ Verifica se é executado sem erros"""
+        piece = Knight("white", 3, 3)
+        # checando se a funcao realmente não tem retorno
+        self.assertIsInstance(self.board.specialMove(piece,0,0,"CR"), type(None))
+
+
 if __name__ == '__main__':
     unittest.main()
