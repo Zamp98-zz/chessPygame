@@ -28,13 +28,21 @@ source venv/Scripts/activate
 pip install pygame
 ```
 
-**Iniciar jogo local**
+**Zip**\
+Baixe o arquivo zip aqui: [Xadrez](https://github.com/Zamp98/chessPygame/archive/refs/heads/master.zip)
+Descompacte o arquivo, e entre na pasta. Execute o arquivo main.exe.
+
+**Iniciar jogo local linux ou Mac**
 
 ```bash
 python3 main.py
 #ou
 python main.py
 ```
+
+**Iniciar jogo local Windows**
+
+Clique duas vezes no arquivo 
 
 </details>
 
