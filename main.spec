@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['/home/jonathan/Documentos/chessPygame'],
+             pathex=['C:\\Users\\Arthur\\PycharmProjects\\chessPygame'],
              binaries=[],
              datas=[],
              hiddenimports=[],
