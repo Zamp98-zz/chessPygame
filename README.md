@@ -40,10 +40,6 @@ python3 main.py
 python main.py
 ```
 
-**Iniciar jogo local Windows**
-
-Clique duas vezes no arquivo 
-
 </details>
 
 ## Como iniciar o Teste de Unidade
