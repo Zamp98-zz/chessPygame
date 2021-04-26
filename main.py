@@ -1,4 +1,6 @@
 # import the pygame module, so you can use it
+import time
+
 import pygame
 from modules.board import *
 from modules.oponent import *
@@ -75,16 +77,24 @@ while running:
             qRect = quitButton.get_rect()
             qRect.x = 150
             qRect.y = 250
+
+            cpuButton = pygame.image.load("images/CPUvsCPU.png")
+            cpuRect = quitButton.get_rect()
+            cpuRect.x = 150
+            cpuRect.y = 350
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # Set the x, y positions of the mouse click
                 if sRect.collidepoint(event.pos):
                     gameState = 1
                 elif qRect.collidepoint(event.pos):
                     running = False
+                elif cpuRect.collidepoint(event.pos):
+                    gameState = 2
 
             screen.blit(background, (0, 0))
             screen.blit(start, sRect)
             screen.blit(quitButton, qRect)
+            screen.blit(cpuButton, cpuRect)
             pygame.display.flip()
             clock.tick(60)
         elif gameState == 1:
@@ -144,6 +154,7 @@ while running:
                                 board.score -= board.pieceValues[type(dest)]
 
                         else:  # THIS MOVE IS IN CHECK, we have to reverse it
+                            print("check")
                             board.movePiece(clickedSprites[0], oldy, oldx)
                             if type(clickedSprites[0]) == King or type(clickedSprites[0]) == Rook:
                                 clickedSprites[0].moved = False
@@ -159,6 +170,7 @@ while running:
                             # different sidemenus depend on whether or not you're
                             # currently in check
                             if checkWhite:
+                                print("check")
                                 pygame.display.update()
                                 pygame.time.wait(1000)
                             else:
@@ -199,11 +211,104 @@ while running:
             elif player == 'black':
                 value, move = minimax(board, 3, float(
                     "-inf"), float("inf"), True, trans_table)
-
+                print(value, move)
                 if value == float("-inf") and move == 0:
                     print("AI checkmate")
                     player = 'white'
                     running = True
+
+                else:
+                    start = move[0]
+                    end = move[1]
+                    piece = board.array[start[0]][start[1]]
+                    dest = board.array[end[0]][end[1]]
+
+                    piecePromotion = board.movePiece(piece, end[0], end[1])
+                    if piecePromotion:
+                        allSpritesList.add(piecePromotion[0])
+                        sprites.append(piecePromotion[0])
+                        allSpritesList.remove(piecePromotion[1])
+                        sprites.remove(piecePromotion[1])
+
+                    if dest:
+                        allSpritesList.remove(dest)
+                        sprites.remove(dest)
+                        board.score += board.pieceValues[type(dest)]
+
+                    player = 'white'
+                    attacked = generatePossibleMoves(board, "black", True)
+                    if (board.whiteKing.y, board.whiteKing.x) in attacked:
+                        checkWhite = True
+                    else:
+                        checkWhite = False
+
+                if value == float("inf"):
+                    print("Player checkmate")
+                    running = False
+                    player = 'AI'
+
+            allSpritesList = pygame.sprite.Group()
+            sprites = [piece for row in board.array for piece in row if piece]
+            allSpritesList.add(sprites)
+            allSpritesList.add(Rects)
+
+            # draw the sprites
+            allSpritesList.draw(screen)
+            screen.blit(bg, (0, 0))
+            allSpritesList.draw(screen)
+            pygame.display.flip()
+            clock.tick(60)
+        elif gameState == 2:
+            if player == 'white':
+                print("White AI")
+                #time.sleep(1)
+                value, move = minimax(board, 3, float(
+                    "-inf"), float("inf"), False, trans_table)
+                print(value, move)
+                if value == float("-inf") and move == 0:
+                    print("AI checkmate")
+                    player = 'black'
+                    running = False
+
+                else:
+                    start = move[0]
+                    end = move[1]
+                    piece = board.array[start[0]][start[1]]
+                    dest = board.array[end[0]][end[1]]
+
+                    piecePromotion = board.movePiece(piece, end[0], end[1])
+                    if piecePromotion:
+                        allSpritesList.add(piecePromotion[0])
+                        sprites.append(piecePromotion[0])
+                        allSpritesList.remove(piecePromotion[1])
+                        sprites.remove(piecePromotion[1])
+
+                    if dest:
+                        allSpritesList.remove(dest)
+                        sprites.remove(dest)
+                        board.score += board.pieceValues[type(dest)]
+
+                    player = 'black'
+                    attacked = generatePossibleMoves(board, "white", True)
+                    if (board.whiteKing.y, board.whiteKing.x) in attacked:
+                        checkBlack = True
+                    else:
+                        checkBlack = False
+
+                if value == float("inf"):
+                    print("Black AI checkmate")
+                    running = False
+                    player = 'AI'
+
+            elif player == 'black':
+                value, move = minimax(board, 3, float(
+                    "-inf"), float("inf"), True, trans_table)
+                #print(value, move)
+                print("Black AI")
+                if value == float("-inf") and move == 0:
+                    print("White AI checkmate")
+                    player = 'AI'
+                    running = False
 
                 else:
                     start = move[0]

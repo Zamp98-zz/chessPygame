@@ -179,8 +179,12 @@ def minimax(board, depth, alpha, beta, maximizing, lastMove):
                     board.score += 9
                 if dest != None:
                     board.score += board.pieceValues[type(dest)]
-
+                if v >= bestValue:
+                    move = (start, (end[0], end[1]))
                 if beta <= alpha:
-                    return bestValue, 0
-
+                    return bestValue, move
+        try:
+            return bestValue, move
+        except:
+            return bestValue, 0
         return bestValue, 0
