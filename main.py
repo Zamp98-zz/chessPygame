@@ -50,6 +50,57 @@ player = "white"
 trans_table = dict()
 
 # main loop
+def drawTable():
+    global gameState
+    if gameState == 0:
+        background = pygame.image.load("images/mainScreen.png")
+        background = pygame.transform.scale(background, (500, 500))
+        start = pygame.image.load("images/playervsIA.png")
+        sRect = start.get_rect()
+
+        sRect.x = 150
+        sRect.y = 125
+
+        quitButton = pygame.image.load("images/quit.png")
+        qRect = quitButton.get_rect()
+        qRect.x = 150
+        qRect.y = 350
+
+        cpuButton = pygame.image.load("images/CPUvsCPU.png")
+        cpuRect = quitButton.get_rect()
+        cpuRect.x = 150
+        cpuRect.y = 250
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            # Set the x, y positions of the mouse click
+            if sRect.collidepoint(event.pos):
+                gameState = 1
+            elif qRect.collidepoint(event.pos):
+                running = False
+            elif cpuRect.collidepoint(event.pos):
+                gameState = 2
+
+        screen.blit(background, (0, 0))
+        screen.blit(start, sRect)
+        screen.blit(quitButton, qRect)
+        screen.blit(cpuButton, cpuRect)
+        pygame.display.flip()
+        clock.tick(60)
+    else:
+        allSpritesList = pygame.sprite.Group()
+        sprites = [piece for row in board.array for piece in row if piece]
+        for s in sprites:
+
+            allSpritesList.add(s)
+        allSpritesList.add(Rects)
+
+        # draw the sprites
+        allSpritesList.draw(screen)
+        screen.blit(bg, (0, 0))
+        allSpritesList.draw(screen)
+        pygame.display.flip()
+        clock.tick(60)
+
+
 while running:
     # event handling, gets all event from the event queue
     for event in pygame.event.get():
@@ -57,47 +108,8 @@ while running:
         if event.type == pygame.QUIT:
             # change the value to False, to exit the main loop
             running = False
-        if gameState == 0:
-            '''        self.sprite = pygame.image.load("templates/vertex.png")
-        self.sprite = pygame.transform.scale(self.sprite, (50, 50))
-        self.rect = self.sprite.get_rect()#tem que pegar a coordenada do sprite e setar de acordo com a coordenada nova do vértice
-        self.rect.x, self.rect.y = x * 60, y * 60
-        self.x = x
-        self.y = y'''
 
-            background = pygame.image.load("images/mainScreen.png")
-            background = pygame.transform.scale(background, (500, 500))
-            start = pygame.image.load("images/playervsIA.png")
-            sRect = start.get_rect()
-
-            sRect.x = 150
-            sRect.y = 125
-
-            quitButton = pygame.image.load("images/quit.png")
-            qRect = quitButton.get_rect()
-            qRect.x = 150
-            qRect.y = 250
-
-            cpuButton = pygame.image.load("images/CPUvsCPU.png")
-            cpuRect = quitButton.get_rect()
-            cpuRect.x = 150
-            cpuRect.y = 350
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                # Set the x, y positions of the mouse click
-                if sRect.collidepoint(event.pos):
-                    gameState = 1
-                elif qRect.collidepoint(event.pos):
-                    running = False
-                elif cpuRect.collidepoint(event.pos):
-                    gameState = 2
-
-            screen.blit(background, (0, 0))
-            screen.blit(start, sRect)
-            screen.blit(quitButton, qRect)
-            screen.blit(cpuButton, cpuRect)
-            pygame.display.flip()
-            clock.tick(60)
-        elif gameState == 1:
+        if gameState == 1:
             if player == "white":
                 if event.type == pygame.MOUSEBUTTONDOWN and not pieceSelected:
                     # Set the x, y positions of the mouse click
@@ -172,10 +184,10 @@ while running:
                             if checkWhite:
                                 print("check")
                                 pygame.display.update()
-                                pygame.time.wait(1000)
+                                #pygame.time.wait(1000)
                             else:
                                 pygame.display.update()
-                                pygame.time.wait(1000)
+                                #pygame.time.wait(1000)
 
 
                     elif (clickedSprites[0].y, clickedSprites[0].x) == tile:
@@ -201,7 +213,7 @@ while running:
 
                         else:
                             pygame.display.update()
-                            pygame.time.wait(1000)
+                            #pygame.time.wait(1000)
 
                     elif (clickedSprites[0].y, clickedSprites[0].x) == tile:
                         clickedSprites[0].unsethighlighted()
@@ -247,17 +259,6 @@ while running:
                     running = False
                     player = 'AI'
 
-            allSpritesList = pygame.sprite.Group()
-            sprites = [piece for row in board.array for piece in row if piece]
-            allSpritesList.add(sprites)
-            allSpritesList.add(Rects)
-
-            # draw the sprites
-            allSpritesList.draw(screen)
-            screen.blit(bg, (0, 0))
-            allSpritesList.draw(screen)
-            pygame.display.flip()
-            clock.tick(60)
         elif gameState == 2:
             if player == 'white':
                 print("White AI")
@@ -265,6 +266,7 @@ while running:
                 value, move = minimax(board, 3, float(
                     "-inf"), float("inf"), False, trans_table)
                 print(value, move)
+
                 if value == float("-inf") and move == 0:
                     print("AI checkmate")
                     player = 'black'
@@ -305,6 +307,8 @@ while running:
                     "-inf"), float("inf"), True, trans_table)
                 #print(value, move)
                 print("Black AI")
+                print(value, move)
+
                 if value == float("-inf") and move == 0:
                     print("White AI checkmate")
                     player = 'AI'
@@ -336,21 +340,11 @@ while running:
                         checkWhite = False
 
                 if value == float("inf"):
-                    print("Player checkmate")
+                    print("Black AI checkmate")
                     running = False
                     player = 'AI'
 
-            allSpritesList = pygame.sprite.Group()
-            sprites = [piece for row in board.array for piece in row if piece]
-            allSpritesList.add(sprites)
-            allSpritesList.add(Rects)
-
-            # draw the sprites
-            allSpritesList.draw(screen)
-            screen.blit(bg, (0, 0))
-            allSpritesList.draw(screen)
-            pygame.display.flip()
-            clock.tick(60)
+    drawTable()
 
 if __name__ == "__main__":
     main()

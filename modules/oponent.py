@@ -139,7 +139,7 @@ def minimax(board, depth, alpha, beta, maximizing, lastMove):
                 bestValue = max(bestValue, v)
                 alpha = max(alpha, bestValue)
 
-                if beta <= alpha:
+                if beta < alpha:
                     return bestValue, move
         try:
             return bestValue, move
@@ -181,7 +181,7 @@ def minimax(board, depth, alpha, beta, maximizing, lastMove):
                     board.score += board.pieceValues[type(dest)]
                 if v >= bestValue:
                     move = (start, (end[0], end[1]))
-                if beta <= alpha:
+                if beta > alpha:
                     return bestValue, move
         try:
             return bestValue, move
